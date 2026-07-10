@@ -1,0 +1,67 @@
+/* ここにalt：ページ内に挿入する置き換え要素のスタイル */
+
+/* パネルモード（テキストありの場合は button、なしの場合は span で生成される） */
+.coconi-alt-panel {
+  all: revert;
+  box-sizing: border-box;
+  display: inline-block;
+  width: var(--coconi-alt-width, auto);
+  height: var(--coconi-alt-height, auto);
+  min-width: 1em;
+  min-height: 1em;
+  margin: 0;
+  padding: 4px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 var(--coconi-alt-border-width, 1px) var(--coconi-alt-border-color, #949494);
+  background: var(--coconi-alt-bg, #F2F2F2);
+  color: var(--coconi-alt-color, #1A1A1A);
+  font-family: system-ui, sans-serif;
+  font-size: var(--coconi-alt-font-size, 16px);
+  font-weight: normal;
+  line-height: 1.5;
+  text-align: left;
+  text-indent: 0;
+  letter-spacing: normal;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+button.coconi-alt-panel {
+  cursor: pointer;
+}
+
+button.coconi-alt-panel:focus-visible {
+  outline: 2px solid var(--coconi-alt-color, #1A1A1A);
+  outline-offset: -4px;
+}
+
+.coconi-alt-panel.coconi-alt-panel-expanded {
+  height: auto;
+  min-height: var(--coconi-alt-height, auto);
+}
+
+/* テキストモード（固定スタイル） */
+.coconi-alt-text-fixed {
+  box-sizing: border-box;
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  padding: 2px 4px;
+  box-shadow: inset 0 0 0 var(--coconi-alt-border-width, 1px) var(--coconi-alt-border-color, #949494);
+  background: var(--coconi-alt-bg, #F2F2F2);
+  color: var(--coconi-alt-color, #1A1A1A);
+  font-family: system-ui, sans-serif;
+  font-size: var(--coconi-alt-font-size, 16px);
+  font-weight: normal;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* テキストモード（継承スタイル）：スタイルを一切付与せず、周囲から継承させる */
+.coconi-alt-text-inherit {
+  overflow-wrap: break-word;
+}

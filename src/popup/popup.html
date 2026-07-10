@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>ここにalt</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <h1>ここにalt</h1>
+
+  <p class="toggle-row">
+    <label>
+      <input type="checkbox" id="enabled">
+      有効にする
+    </label>
+  </p>
+
+  <fieldset>
+    <legend>表示モード</legend>
+    <label>
+      <input type="radio" name="mode" value="panel">
+      パネルモード
+    </label>
+    <label>
+      <input type="radio" name="mode" value="text-fixed">
+      テキストモード（固定スタイル）
+    </label>
+    <label>
+      <input type="radio" name="mode" value="text-inherit">
+      テキストモード（継承スタイル）
+    </label>
+  </fieldset>
+
+  <p class="options-row">
+    <a href="../options/options.html" id="open-options">オプションページを開く</a>
+  </p>
+</body>
+</html>

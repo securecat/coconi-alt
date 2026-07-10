@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ここにalt - オプション</title>
+  <link rel="stylesheet" href="options.css">
+  <script src="options.js" defer></script>
+</head>
+<body>
+  <h1>ここにalt - オプション</h1>
+
+  <form id="options-form">
+    <section>
+      <h2>見た目設定</h2>
+      <p class="section-note">パネルモードとテキストモード（固定スタイル）の見た目です。</p>
+      <div class="field">
+        <label for="font-size">フォントサイズ（px）</label>
+        <input type="number" id="font-size" min="8" max="96" step="1" required>
+      </div>
+      <div class="field">
+        <label for="color">前景色（フォントカラー）</label>
+        <input type="color" id="color">
+      </div>
+      <div class="field">
+        <label for="background-color">背景色</label>
+        <input type="color" id="background-color">
+      </div>
+      <div class="field">
+        <label for="border-color">ボーダーカラー</label>
+        <input type="color" id="border-color">
+      </div>
+      <div class="field">
+        <label for="border-width">ボーダー幅（px）</label>
+        <input type="number" id="border-width" min="0" max="20" step="1" required>
+        <p class="field-note">ボーダーは要素の内側に描画され、レイアウトに影響を与えません。</p>
+      </div>
+    </section>
+
+    <section>
+      <fieldset>
+        <legend><h2>空alt（alt=""）の挙動</h2></legend>
+        <label>
+          <input type="radio" name="empty-alt" value="show">
+          そのまま表示（テキストなし）
+        </label>
+        <label>
+          <input type="radio" name="empty-alt" value="display-none">
+          display: none にする
+        </label>
+        <label>
+          <input type="radio" name="empty-alt" value="visibility-hidden">
+          visibility: hidden にする
+        </label>
+      </fieldset>
+    </section>
+
+    <section>
+      <fieldset>
+        <legend><h2>alt属性なしの挙動</h2></legend>
+        <label>
+          <input type="radio" name="missing-alt" value="show">
+          そのまま表示（srcのフルパスをテキストとして表示）
+        </label>
+        <label>
+          <input type="radio" name="missing-alt" value="display-none">
+          display: none にする
+        </label>
+        <label>
+          <input type="radio" name="missing-alt" value="visibility-hidden">
+          visibility: hidden にする
+        </label>
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>除外リスト</h2>
+      <div class="field">
+        <label for="excluded-domains">除外するドメイン（1行につき1ドメイン）</label>
+        <textarea id="excluded-domains" rows="6" spellcheck="false" placeholder="example.com&#10;example.jp"></textarea>
+        <p class="field-note">記載したドメイン（サブドメインを含む）では置き換えを行いません。</p>
+      </div>
+    </section>
+
+    <p class="actions">
+      <button type="submit">保存</button>
+    </p>
+    <p role="status" id="status"></p>
+  </form>
+</body>
+</html>
