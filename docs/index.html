@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ここにalt 動作確認ページ</title>
+  <style>
+    body {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      font-family: sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #1A1A1A;
+      background: #FFFFFF;
+    }
+    h1 { font-size: 24px; }
+    h2 { font-size: 18px; margin-top: 40px; border-bottom: 1px solid #767676; }
+    .styled-context {
+      font-size: 20px;
+      color: #7A1FA2;
+      font-style: italic;
+    }
+    .emoji-icon { font-size: 48px; }
+    .bg-plain {
+      width: 300px;
+      height: 150px;
+      background-image: url("https://placehold.co/300x150/CC8800/FFFFFF.png");
+      background-size: cover;
+    }
+    .bg-labeled {
+      width: 300px;
+      height: 150px;
+      background-image: url("https://placehold.co/300x150/008888/FFFFFF.png");
+      background-size: cover;
+    }
+    .bg-gradient {
+      display: inline-block;
+      padding: 12px 24px;
+      background-image: linear-gradient(#4A90D9, #1A5FA9);
+      color: #FFFFFF;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>ここにalt 動作確認ページ</h1>
+  <p>各ケースで置き換え表示・クリック展開・後続要素の押し出しを確認するためのページです。</p>
+
+  <h2>1. 通常のalt（短文）</h2>
+  <p>前の段落です。</p>
+  <img src="aoisora.png" width="300" height="200" alt="青い空と白い雲">
+  <p>後ろの段落です。パネル展開時にこの段落が下に押し出されればOKです。</p>
+
+  <h2>2. 通常のalt（長文・見切れ確認用）</h2>
+  <img src="yuugure.png" width="200" height="100" alt="夕暮れの海岸線を撮影した写真。オレンジ色に染まった空の下、波打ち際を犬を連れた人物が歩いており、遠くには灯台のシルエットが見える。手前の砂浜には貝殻がいくつか散らばっている。">
+  <p>後ろの段落です。クリックで全文が出て、この段落が押し出されればOKです。</p>
+
+  <h2>3. 空alt（alt=""）</h2>
+  <p>デフォルト設定では display: none になり、下の装飾画像が消えるのが正解です。</p>
+  <img src="https://placehold.co/200x50/999999/FFFFFF.png" width="200" height="50" alt="">
+  <p>後ろの段落です。</p>
+
+  <h2>4. alt属性なし</h2>
+  <p>デフォルト設定では src のフルパスがテキスト表示されるのが正解です。</p>
+  <img src="https://placehold.co/200x100/44AA44/FFFFFF.png" width="200" height="100">
+  <p>後ろの段落です。</p>
+
+  <h2>5. role="img" + aria-label</h2>
+  <p>絵文字のかたまり全体が aria-label の内容に置き換わればOKです。</p>
+  <p><span role="img" aria-label="お祝いのクラッカーと拍手" class="emoji-icon">🎉👏🎊</span></p>
+
+  <h2>6. role="img"（aria-labelなし）</h2>
+  <p>こちらは何も起きないのが正解です。</p>
+  <p><span role="img" class="emoji-icon">🤔</span></p>
+
+  <h2>7. スタイル継承の確認（継承スタイルモード用）</h2>
+  <p class="styled-context">この段落は紫色・20px・斜体です。
+    <img src="https://placehold.co/150x150/AA44AA/FFFFFF.png" width="150" height="150" alt="紫色の正方形のサンプル画像">
+    継承スタイルモードでは、altテキストがこの文章と同じ見た目になればOKです。
+  </p>
+
+  <h2>8. 背景画像（roleなし）</h2>
+  <p>デフォルト設定（背景画像：非表示にする）では、下の背景画像が消えるのが正解です。</p>
+  <div class="bg-plain"></div>
+  <p>後ろの段落です。</p>
+
+  <h2>9. 背景画像 + role="img" + aria-label</h2>
+  <p>こちらは背景が消えるのではなく、aria-labelの内容に置き換わるのが正解です。</p>
+  <div class="bg-labeled" role="img" aria-label="ティール色の背景画像のサンプル"></div>
+  <p>後ろの段落です。</p>
+
+  <h2>10. グラデーション背景（対象外）</h2>
+  <p>グラデーションは画像ではないので、そのまま残るのが正解です。</p>
+  <p><span class="bg-gradient">グラデーション背景の要素</span></p>
+
+  <h2>11. 動的追加（MutationObserver確認用）</h2>
+  <p>下のボタンを押すと3秒後に画像が追加されます。追加後に自動で置き換わればOKです。</p>
+  <p><button type="button" id="add-image">3秒後に画像を追加</button></p>
+  <div id="dynamic-area"></div>
+  <p>後ろの段落です。</p>
+
+  <script>
+    document.getElementById('add-image').addEventListener('click', () => {
+      setTimeout(() => {
+        const img = document.createElement('img');
+        img.src = 'https://placehold.co/250x120/2266CC/FFFFFF.png';
+        img.width = 250;
+        img.height = 120;
+        img.alt = '動的に追加された画像のaltテキスト';
+        document.getElementById('dynamic-area').appendChild(img);
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
