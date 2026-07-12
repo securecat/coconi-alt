@@ -8,6 +8,7 @@ const DEFAULTS = {
   borderWidth: 1,
   emptyAltBehavior: 'display-none',
   missingAltBehavior: 'show',
+  backgroundImageBehavior: 'hide',
   excludedDomains: []
 };
 
@@ -40,6 +41,7 @@ async function restore() {
   borderWidthInput.value = stored.borderWidth;
   setRadioValue('empty-alt', stored.emptyAltBehavior);
   setRadioValue('missing-alt', stored.missingAltBehavior);
+  setRadioValue('background-image', stored.backgroundImageBehavior);
   excludedDomainsInput.value = stored.excludedDomains.join('\n');
 }
 
@@ -60,6 +62,7 @@ form.addEventListener('submit', async (event) => {
     borderWidth: Math.max(0, Number(borderWidthInput.value) || 0),
     emptyAltBehavior: getRadioValue('empty-alt') || DEFAULTS.emptyAltBehavior,
     missingAltBehavior: getRadioValue('missing-alt') || DEFAULTS.missingAltBehavior,
+    backgroundImageBehavior: getRadioValue('background-image') || DEFAULTS.backgroundImageBehavior,
     excludedDomains: parseExcludedDomains(excludedDomainsInput.value)
   });
   statusOutput.textContent = '設定を保存しました。開いているページには即時反映されます。';

@@ -13,10 +13,12 @@ const COCONI_ALT_DEFAULTS = {
   borderWidth: 1,
   emptyAltBehavior: 'display-none',
   missingAltBehavior: 'show',
+  backgroundImageBehavior: 'hide',
   excludedDomains: []
 };
 
 const MARKER_ATTR = 'data-coconi-alt-processed';
+const BG_MARKER_ATTR = 'data-coconi-alt-bg-processed';
 const REPLACEMENT_CLASS = 'coconi-alt-replacement';
 
 let settings = { ...COCONI_ALT_DEFAULTS };
@@ -159,6 +161,36 @@ function processRoleImg(el) {
   applyBehavior(el, label, 'show');
 }
 
+// CSS背景画像（url() を含むもの）を非表示にする。
+// role="img" 等の置き換え対象にならない背景画像は、スクリーンリーダーに
+// 知覚されない「見た目だけの情報」なので、耳で見ている世界には存在しない。
+// グラデーションのみの背景は画像ではないため対象外。
+function processBackgroundImage(el) {
+  if (el.hasAttribute(BG_MARKER_ATTR) || el.hasAttribute(MARKER_ATTR)) {
+    return;
+  }
+  if (el.closest(`.${REPLACEMENT_CLASS}`)) {
+    return;
+  }
+  if (el.parentElement && el.parentElement.closest(`[${MARKER_ATTR}]`)) {
+    return;
+  }
+  const backgroundImage = getComputedStyle(el).backgroundImage;
+  if (backgroundImage === 'none' || !backgroundImage.includes('url(')) {
+    return;
+  }
+  const record = {
+    original: el,
+    replacement: null,
+    kind: 'bg',
+    inlineBackgroundImage: el.style.getPropertyValue('background-image'),
+    inlineBackgroundPriority: el.style.getPropertyPriority('background-image')
+  };
+  el.setAttribute(BG_MARKER_ATTR, '');
+  el.style.setProperty('background-image', 'none', 'important');
+  records.push(record);
+}
+
 function processElement(el) {
   if (el.hasAttribute(MARKER_ATTR)) {
     return;
@@ -181,10 +213,17 @@ function processTree(root) {
   if (root.nodeType !== Node.ELEMENT_NODE) {
     return;
   }
+  // 置き換え（img / role="img"）を先に処理してから背景画像を走査する。
+  // 置き換え済みサブツリー内の背景画像はマーカー判定でスキップされる。
   if (root.matches('img, [role="img"]')) {
     processElement(root);
   }
   root.querySelectorAll('img, [role="img"]').forEach(processElement);
+
+  if (settings.backgroundImageBehavior === 'hide') {
+    processBackgroundImage(root);
+    root.querySelectorAll('*').forEach(processBackgroundImage);
+  }
 }
 
 // ページ側のDOM変化で元要素・置き換え要素が消えた記録を掃除する
@@ -223,6 +262,15 @@ function startObserver() {
 
 function restoreRecord(record) {
   const el = record.original;
+  if (record.kind === 'bg') {
+    if (record.inlineBackgroundImage) {
+      el.style.setProperty('background-image', record.inlineBackgroundImage, record.inlineBackgroundPriority);
+    } else {
+      el.style.removeProperty('background-image');
+    }
+    el.removeAttribute(BG_MARKER_ATTR);
+    return;
+  }
   el.style.display = record.inlineDisplay;
   el.style.visibility = record.inlineVisibility;
   el.removeAttribute(MARKER_ATTR);

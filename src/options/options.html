@@ -74,6 +74,21 @@
     </section>
 
     <section>
+      <fieldset>
+        <legend><h2>背景画像（background-image）の扱い</h2></legend>
+        <p class="section-note">CSSの背景画像は、alt等の代替テキストを持たずスクリーンリーダーに知覚されません。「非表示にする」を選ぶと、スクリーンリーダー利用者の体験に忠実な表示になります（グラデーションのみの背景は対象外）。</p>
+        <label>
+          <input type="radio" name="background-image" value="hide">
+          非表示にする
+        </label>
+        <label>
+          <input type="radio" name="background-image" value="keep">
+          そのまま表示
+        </label>
+      </fieldset>
+    </section>
+
+    <section>
       <h2>除外リスト</h2>
       <div class="field">
         <label for="excluded-domains">除外するドメイン（1行につき1ドメイン）</label>

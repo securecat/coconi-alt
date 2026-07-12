@@ -5,6 +5,18 @@
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に準拠し、
 バージョン管理は [Semantic Versioning](https://semver.org/lang/ja/) に従います。
 
+## [1.1.0] - 2026-07-12
+
+### 追加
+
+- CSS背景画像（`url()` を含む `background-image`）を非表示にする機能を追加。スクリーンリーダーに知覚されない背景画像を消すことで、「耳で見ている」世界の視覚化に忠実な表示にする（グラデーションのみの背景は対象外）
+- オプションページに「背景画像（background-image）の扱い」設定を追加（非表示にする／そのまま表示。デフォルト：非表示にする）
+
+### 変更
+
+- フォント指定から `system-ui` を削除し `sans-serif` に統一（Windowsで本文がUI用フォント「Yu Gothic UI」で表示されるのを避けるため）
+- ポップアップの横幅を拡大（280px → 420px）
+
 ## [1.0.0] - 2026-07-10
 
 ### 追加
