@@ -12,29 +12,42 @@
 
   <form id="options-form">
     <section>
-      <h2>見た目設定</h2>
-      <p class="section-note">パネルモードとテキストモード（固定スタイル）の見た目です。</p>
-      <div class="field">
-        <label for="font-size">フォントサイズ（px）</label>
-        <input type="number" id="font-size" min="8" max="96" step="1" required>
-      </div>
-      <div class="field">
-        <label for="color">前景色（フォントカラー）</label>
-        <input type="color" id="color">
-      </div>
-      <div class="field">
-        <label for="background-color">背景色</label>
-        <input type="color" id="background-color">
-      </div>
-      <div class="field">
-        <label for="border-color">ボーダーカラー</label>
-        <input type="color" id="border-color">
-      </div>
-      <div class="field">
-        <label for="border-width">ボーダー幅（px）</label>
-        <input type="number" id="border-width" min="0" max="20" step="1" required>
-        <p class="field-note">ボーダーは要素の内側に描画され、レイアウトに影響を与えません。</p>
-      </div>
+      <fieldset>
+        <legend><h2>見た目設定</h2></legend>
+        <p class="section-note">パネルモードとテキストモード（固定スタイル）の見た目です。</p>
+        <div class="field">
+          <label for="font-size">フォントサイズ（px）</label>
+          <input type="number" id="font-size" min="8" max="96" step="1" required>
+        </div>
+        <div class="field">
+          <label for="color">前景色（フォントカラー）</label>
+          <input type="color" id="color">
+        </div>
+        <div class="field">
+          <label for="background-color">背景色</label>
+          <input type="color" id="background-color">
+        </div>
+        <div class="field">
+          <label for="border-color">ボーダーカラー</label>
+          <input type="color" id="border-color">
+        </div>
+        <div class="field">
+          <label for="border-width">ボーダー幅（px）</label>
+          <input type="number" id="border-width" min="0" max="20" step="1" required>
+          <p class="field-note">ボーダーは要素の内側に描画され、レイアウトに影響を与えません。</p>
+        </div>
+      </fieldset>
+    </section>
+
+    <section>
+      <fieldset>
+        <legend><h2>パネル背景の不透明度</h2></legend>
+        <div class="field">
+          <label for="panel-opacity">不透明度（%）</label>
+          <input type="number" id="panel-opacity" min="0" max="100" step="5" required>
+          <p class="field-note">パネルモードのみ。100未満にすると背景が半透明になり、元の画像が透けて見えます（altチェック用途向け）。テキストは常に不透明です。下げるほどテキストと背景のコントラストが低下する点に注意してください。</p>
+        </div>
+      </fieldset>
     </section>
 
     <section>
@@ -89,12 +102,14 @@
     </section>
 
     <section>
-      <h2>除外リスト</h2>
-      <div class="field">
-        <label for="excluded-domains">除外するドメイン（1行につき1ドメイン）</label>
-        <textarea id="excluded-domains" rows="6" spellcheck="false" placeholder="example.com&#10;example.jp"></textarea>
-        <p class="field-note">記載したドメイン（サブドメインを含む）では置き換えを行いません。</p>
-      </div>
+      <fieldset>
+        <legend><h2>除外リスト</h2></legend>
+        <div class="field">
+          <label for="excluded-domains">除外するドメイン（1行につき1ドメイン）</label>
+          <textarea id="excluded-domains" rows="6" spellcheck="false" placeholder="example.com&#10;example.jp"></textarea>
+          <p class="field-note">記載したドメイン（サブドメインを含む）では置き換えを行いません。</p>
+        </div>
+      </fieldset>
     </section>
 
     <p class="actions">
@@ -102,5 +117,9 @@
     </p>
     <p role="status" id="status"></p>
   </form>
+
+  <hr>
+
+  <p>バグを見つけたら、<a href="https://github.com/securecat/coconi-alt/issues" target="_blank" rel="noopener">GitHub Issues</a> へ報告してください。</p>
 </body>
 </html>

@@ -11,6 +11,7 @@ const COCONI_ALT_DEFAULTS = {
   backgroundColor: '#F2F2F2',
   borderColor: '#949494',
   borderWidth: 1,
+  panelOpacity: 100,
   emptyAltBehavior: 'display-none',
   missingAltBehavior: 'show',
   backgroundImageBehavior: 'hide',
@@ -70,6 +71,45 @@ function setPanelSize(panel, record) {
   }
 }
 
+function hexToRgba(hex, alpha) {
+  const match = /^#?([0-9a-f]{6})$/i.exec(String(hex).trim());
+  if (!match) {
+    return hex;
+  }
+  const value = parseInt(match[1], 16);
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function relativeLuminance(hex) {
+  const match = /^#?([0-9a-f]{6})$/i.exec(String(hex).trim());
+  if (!match) {
+    return 0;
+  }
+  const value = parseInt(match[1], 16);
+  const channel = (v) => {
+    const c = v / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel((value >> 16) & 255)
+    + 0.7152 * channel((value >> 8) & 255)
+    + 0.0722 * channel(value & 255);
+}
+
+// 不透明度が100未満のとき、元画像をパネルの下敷きレイヤーとして表示する
+// （altチェック用途向け。画像URLをCSS背景として敷くため、未ロードの遅延画像でも表示できる）
+function setPanelUnderlay(panel, img) {
+  if (settings.panelOpacity >= 100) {
+    return;
+  }
+  const src = img.currentSrc || img.src || '';
+  if (src) {
+    panel.style.setProperty('--coconi-alt-underlay', `url("${src.replace(/"/g, '\\"')}")`);
+  }
+}
+
 function createPanel(text, record) {
   // 空テキストのパネルは展開操作に意味がないため、フォーカス不能な span にする
   const isInteractive = text.length > 0;
@@ -85,6 +125,16 @@ function createPanel(text, record) {
     });
   }
   applyThemeVars(panel);
+  if (settings.panelOpacity < 100) {
+    panel.style.setProperty('--coconi-alt-bg', hexToRgba(settings.backgroundColor, settings.panelOpacity / 100));
+    // 透けた画像の上でも文字の輪郭が立つよう、前景色の輝度に応じて
+    // 白/黒を選んだ4方向ハローを付ける
+    const halo = relativeLuminance(settings.color) > 0.5 ? '#000000' : '#FFFFFF';
+    panel.style.setProperty(
+      '--coconi-alt-text-shadow',
+      `1px 1px 0 ${halo}, -1px 1px 0 ${halo}, 1px -1px 0 ${halo}, -1px -1px 0 ${halo}`
+    );
+  }
   return panel;
 }
 
@@ -132,9 +182,15 @@ function applyBehavior(el, text, behavior) {
 
     if (settings.mode === 'panel') {
       setPanelSize(replacement, record);
-      // 未ロード画像は寸法が確定していないため、ロード完了後に測り直す
-      if (el.tagName === 'IMG' && !el.complete) {
-        el.addEventListener('load', () => setPanelSize(replacement, record), { once: true });
+      if (el.tagName === 'IMG') {
+        setPanelUnderlay(replacement, el);
+        // 未ロード画像は寸法・currentSrcが確定していないため、ロード完了後に反映し直す
+        if (!el.complete) {
+          el.addEventListener('load', () => {
+            setPanelSize(replacement, record);
+            setPanelUnderlay(replacement, el);
+          }, { once: true });
+        }
       }
     }
   }

@@ -15,13 +15,21 @@
   border: 0;
   border-radius: 0;
   box-shadow: inset 0 0 0 var(--coconi-alt-border-width, 1px) var(--coconi-alt-border-color, #949494);
-  background: var(--coconi-alt-bg, #F2F2F2);
+  /* 背景色レイヤーの下に元画像（--coconi-alt-underlay）を敷ける2層構成。
+     不透明度100%時は下層が none のまま単色表示になる */
+  background-color: transparent;
+  background-image:
+    linear-gradient(var(--coconi-alt-bg, #F2F2F2), var(--coconi-alt-bg, #F2F2F2)),
+    var(--coconi-alt-underlay, none);
+  background-size: cover;
+  background-repeat: no-repeat;
   color: var(--coconi-alt-color, #1A1A1A);
   font-family: sans-serif;
   font-size: var(--coconi-alt-font-size, 16px);
   font-weight: normal;
   line-height: 1.5;
   text-align: left;
+  text-shadow: var(--coconi-alt-text-shadow, none);
   text-indent: 0;
   letter-spacing: normal;
   white-space: normal;
