@@ -34,13 +34,18 @@ function getRadioValue(name) {
   return checked ? checked.value : null;
 }
 
+// 見た目設定セクションの入力欄に値を流し込む（保存はしない）
+function fillAppearance(values) {
+  fontSizeInput.value = values.fontSize;
+  colorInput.value = values.color;
+  backgroundColorInput.value = values.backgroundColor;
+  borderColorInput.value = values.borderColor;
+  borderWidthInput.value = values.borderWidth;
+}
+
 async function restore() {
   const stored = await chrome.storage.sync.get(DEFAULTS);
-  fontSizeInput.value = stored.fontSize;
-  colorInput.value = stored.color;
-  backgroundColorInput.value = stored.backgroundColor;
-  borderColorInput.value = stored.borderColor;
-  borderWidthInput.value = stored.borderWidth;
+  fillAppearance(stored);
   panelOpacityInput.value = stored.panelOpacity;
   setRadioValue('empty-alt', stored.emptyAltBehavior);
   setRadioValue('missing-alt', stored.missingAltBehavior);
@@ -54,6 +59,10 @@ function parseExcludedDomains(value) {
     .map((line) => line.trim().toLowerCase())
     .filter((line) => line !== '');
 }
+
+document.getElementById('reset-appearance').addEventListener('click', () => {
+  fillAppearance(DEFAULTS);
+});
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();

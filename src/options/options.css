@@ -5,6 +5,7 @@
   --color-border: #767676;
   --color-accent: #0B57D0;
   --color-success: #197A4B;
+  --color-danger: #EC0000;
   --color-button-bg: #1A1A1A;
   --color-button-text: #FFFFFF;
 }
@@ -17,6 +18,7 @@
     --color-border: #8A8A93;
     --color-accent: #8AB4F8;
     --color-success: #4EC98A;
+    --color-danger: #FF7171;
     --color-button-bg: #F2F2F2;
     --color-button-text: #1A1A1A;
   }
@@ -134,6 +136,22 @@ input[type="radio"] {
 
 .actions {
   margin: 0 0 8px;
+}
+
+.reset-actions {
+  margin: 16px 0 4px;
+}
+
+/* 破壊的アクションのボタン：入力フィールドと見分けがつくよう赤系の配色にする */
+.reset-actions button {
+  padding: 6px 16px;
+  border: 1px solid var(--color-danger);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-danger);
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 button[type="submit"] {
