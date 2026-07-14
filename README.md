@@ -20,7 +20,7 @@ webページ中の画像をalt属性（および `role="img"` 要素の `aria-la
 
 ### Chrome ウェブストア
 
-https://chromewebstore.google.com/detail/%E3%81%93%E3%81%93%E3%81%ABalt/bcaijokgbadgjbefdddafgaafecfabld
+[https://chromewebstore.google.com/detail/ここにalt/bcaijokgbadgjbefdddafgaafecfabld](https://chromewebstore.google.com/detail/%E3%81%93%E3%81%93%E3%81%ABalt/bcaijokgbadgjbefdddafgaafecfabld)
 
 > Chrome ウェブストア版は、審査中のため最新リリースより古い場合があります。
 
