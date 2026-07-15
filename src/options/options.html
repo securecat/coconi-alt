@@ -90,9 +90,9 @@
         </label>
         <label>
           <input type="radio" name="missing-alt" value="ai">
-          AIによる推測を代替テキストとして使う（試験的機能）
+          AIによる推測を代替テキストとして使う（Chrome 138以降）
         </label>
-        <p class="field-note">Chrome内蔵AI（Gemini Nano）が画像単体から日本語の代替テキストを生成し、「AIによる推測: 」を付けて表示します。Chrome 138以降と対応ハードウェア（十分な空きストレージ・GPU）が必要で、初回はモデルのダウンロードが発生します。環境によっては chrome://flags で #prompt-api-for-gemini-nano-multimodal-input の有効化が必要です。処理は端末内で完結し、画像が外部に送信されることはありません。生成できない場合はsrcのフルパス表示にフォールバックします。</p>
+        <details class="field-note"><summary>AIによる推測の動作環境について</summary>Chrome内蔵AI（Gemini Nano）が画像単体から日本語の代替テキストを生成し、「AIによる推測: 」を付けて表示します。Chrome 138以降と対応ハードウェア（十分な空きストレージ・GPU）が必要で、初回はモデルのダウンロードが発生します。環境によっては chrome://flags で #prompt-api-for-gemini-nano-multimodal-input の有効化が必要です。処理は端末内で完結し、画像が外部に送信されることはありません。生成できない場合はsrcのフルパス表示にフォールバックします。</details>
       </fieldset>
     </section>
 
