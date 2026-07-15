@@ -81,4 +81,9 @@ form.addEventListener('submit', async (event) => {
   statusOutput.textContent = '設定を保存しました。開いているページには即時反映されます。';
 });
 
+// 保存メッセージはウィンドウのフォーカスが外れたタイミングで消す
+window.addEventListener('blur', () => {
+  statusOutput.textContent = '';
+});
+
 restore();
