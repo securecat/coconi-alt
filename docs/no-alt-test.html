@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ここにalt alt属性なし画像の動作確認ページ</title>
+  <style>
+    body {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      font-family: sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #1A1A1A;
+      background: #FFFFFF;
+    }
+    h1 { font-size: 24px; }
+    h2 { font-size: 18px; margin-top: 40px; border-bottom: 1px solid #767676; }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .grid img { max-width: 100%; }
+    a { color: #0B57D0; text-decoration: underline; }
+    a:hover { text-decoration-thickness: 2px; }
+  </style>
+</head>
+<body>
+  <h1>ここにalt alt属性なし画像の動作確認ページ</h1>
+  <p>このページの画像には、<strong>意図的にalt属性を付けていません</strong>。「ここにalt」の「alt属性なしの挙動」設定（特に試験的機能「AIによる推測を代替テキストとして使う」）の動作確認用です。</p>
+  <p>画像はプレースホルダー系の外部サービス（picsum.photos・robohash.org・placehold.co）から読み込んでいます。</p>
+
+  <h2>風景・実写系（picsum.photos）</h2>
+  <div class="grid">
+    <img src="https://picsum.photos/id/1018/400/300" width="400" height="300">
+    <img src="https://picsum.photos/id/1015/400/300" width="400" height="300">
+    <img src="https://picsum.photos/id/1040/400/300" width="400" height="300">
+    <img src="https://picsum.photos/id/1084/400/300" width="400" height="300">
+    <img src="https://picsum.photos/id/237/300/300" width="300" height="300">
+    <img src="https://picsum.photos/id/1025/300/300" width="300" height="300">
+  </div>
+
+  <h2>キャラクター風（robohash.org）</h2>
+  <div class="grid">
+    <img src="https://robohash.org/coconi-alpha.png?set=set1&size=250x250" width="250" height="250">
+    <img src="https://robohash.org/coconi-bravo.png?set=set2&size=250x250" width="250" height="250">
+    <img src="https://robohash.org/coconi-charlie.png?set=set3&size=250x250" width="250" height="250">
+    <img src="https://robohash.org/coconi-delta.png?set=set4&size=250x250" width="250" height="250">
+  </div>
+
+  <h2>文字入り画像（placehold.co）</h2>
+  <div class="grid">
+    <img src="https://placehold.co/400x200/1A5FA9/FFFFFF.png?text=Coconi+Alt" width="400" height="200">
+    <img src="https://placehold.co/400x200/197A4B/FFFFFF.png?text=Hello+World" width="400" height="200">
+  </div>
+
+  <p><a href="./index.html">基本の動作確認ページへ</a></p>
+</body>
+</html>
