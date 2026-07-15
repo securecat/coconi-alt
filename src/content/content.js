@@ -153,6 +153,42 @@ function createTextInherit(text) {
   return span;
 }
 
+// AIによる推測（試験的機能）：service workerに生成を依頼し、
+// 返ってきたテキストで置き換え要素の内容を差し替える
+const AI_PREFIX = 'AIによる推測: ';
+const AI_PENDING_TEXT = 'AIによる推測を生成中…';
+
+function requestAiAltText(img, record) {
+  const url = img.currentSrc || img.src || '';
+  const showFallback = (reason) => {
+    if (record.replacement && record.replacement.isConnected) {
+      record.replacement.textContent = reason ? `AIによる推測を利用できません（${reason}）: ${url}` : url;
+    }
+  };
+  if (!url) {
+    showFallback('');
+    return;
+  }
+  try {
+    chrome.runtime.sendMessage({ type: 'coconi-alt-generate-alt', url }, (response) => {
+      if (chrome.runtime.lastError || !response) {
+        showFallback(chrome.runtime.lastError ? chrome.runtime.lastError.message : '応答なし');
+        return;
+      }
+      if (!record.replacement || !record.replacement.isConnected) {
+        return;
+      }
+      if (response.ok && response.text) {
+        record.replacement.textContent = AI_PREFIX + response.text;
+      } else {
+        showFallback(response.error || '不明なエラー');
+      }
+    });
+  } catch (error) {
+    showFallback(String(error && error.message ? error.message : error));
+  }
+}
+
 // behavior: 'show' | 'display-none' | 'visibility-hidden'
 function applyBehavior(el, text, behavior) {
   const record = {
@@ -196,12 +232,21 @@ function applyBehavior(el, text, behavior) {
   }
 
   records.push(record);
+  return record;
 }
 
 function processImg(img) {
   if (!img.hasAttribute('alt')) {
-    const src = img.currentSrc || img.src || '';
-    applyBehavior(img, src, settings.missingAltBehavior);
+    if (settings.missingAltBehavior === 'ai') {
+      const record = applyBehavior(img, AI_PENDING_TEXT, 'show');
+      if (record.replacement) {
+        record.replacement.classList.add('coconi-alt-ai');
+      }
+      requestAiAltText(img, record);
+    } else {
+      const src = img.currentSrc || img.src || '';
+      applyBehavior(img, src, settings.missingAltBehavior);
+    }
   } else if (img.getAttribute('alt') === '') {
     applyBehavior(img, '', settings.emptyAltBehavior);
   } else {

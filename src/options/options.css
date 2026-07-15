@@ -71,6 +71,14 @@ section {
   margin: 4px 0 0;
 }
 
+details.field-note {
+  margin-left: 2rem;
+}
+
+details.field-note summary {
+  cursor: pointer;
+}
+
 input[type="number"] {
   box-sizing: border-box;
   width: 6em;
