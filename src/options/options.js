@@ -62,6 +62,7 @@ function parseExcludedDomains(value) {
 
 document.getElementById('reset-appearance').addEventListener('click', () => {
   fillAppearance(DEFAULTS);
+  clearStatus();
 });
 
 form.addEventListener('submit', async (event) => {
@@ -81,9 +82,14 @@ form.addEventListener('submit', async (event) => {
   statusOutput.textContent = '設定を保存しました。開いているページには即時反映されます。';
 });
 
-// 保存メッセージはウィンドウのフォーカスが外れたタイミングで消す
-window.addEventListener('blur', () => {
+// 保存メッセージはユーザーの操作起因で消す：
+// ウィンドウのフォーカスが外れたとき、またはフォームコントロールを操作した
+// （＝入力内容が保存済みの状態から変わり始めた）とき
+function clearStatus() {
   statusOutput.textContent = '';
-});
+}
+
+window.addEventListener('blur', clearStatus);
+form.addEventListener('input', clearStatus);
 
 restore();
