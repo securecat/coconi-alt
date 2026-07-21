@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "ここにalt",
-  "version": "1.4.2",
-  "description": "Webページ中の画像をalt属性の内容（role=\"img\" 要素は aria-label）に置き換えて、スクリーンリーダー利用者が耳で見ている世界を視覚化します。",
+  "version": "1.4.3",
+  "description": "Webページ中の画像をalt属性の内容（role=\"img\" 要素は aria-label）に置き換え、スクリーンリーダー利用者が耳で見ている世界を視覚化します。",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",

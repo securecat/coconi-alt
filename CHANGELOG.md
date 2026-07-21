@@ -5,6 +5,12 @@
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に準拠し、
 バージョン管理は [Semantic Versioning](https://semver.org/lang/ja/) に従います。
 
+## [1.4.3] - 2026-07-18
+
+### 修正
+
+- `manifest.json` の説明文が `chrome://extensions` で途中で見切れていたのを修正（「置き換えて」→「置き換え」）
+
 ## [1.4.2] - 2026-07-17
 
 ### 変更
