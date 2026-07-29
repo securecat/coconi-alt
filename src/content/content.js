@@ -98,13 +98,26 @@ function relativeLuminance(hex) {
     + 0.0722 * channel(value & 255);
 }
 
-// 不透明度が100未満のとき、元画像をパネルの下敷きレイヤーとして表示する
+// img は画像そのもの、video は poster（再生前サムネイル）のURLを返す。
+// video に poster が無い場合、フレームをキャプチャする手段はCORSで失敗しやすく
+// 信頼性が低いため何もしない
+function getUnderlayImageUrl(el) {
+  if (el.tagName === 'IMG') {
+    return el.currentSrc || el.src || '';
+  }
+  if (el.tagName === 'VIDEO') {
+    return el.poster || '';
+  }
+  return '';
+}
+
+// 不透明度が100未満のとき、元画像（またはvideoのposter）をパネルの下敷きレイヤーとして表示する
 // （altチェック用途向け。画像URLをCSS背景として敷くため、未ロードの遅延画像でも表示できる）
-function setPanelUnderlay(panel, img) {
+function setPanelUnderlay(panel, el) {
   if (settings.panelOpacity >= 100) {
     return;
   }
-  const src = img.currentSrc || img.src || '';
+  const src = getUnderlayImageUrl(el);
   if (src) {
     panel.style.setProperty('--coconi-alt-underlay', `url("${src.replace(/"/g, '\\"')}")`);
   }
@@ -227,6 +240,8 @@ function applyBehavior(el, text, behavior) {
             setPanelUnderlay(replacement, el);
           }, { once: true });
         }
+      } else if (el.tagName === 'VIDEO') {
+        setPanelUnderlay(replacement, el);
       }
     }
   }
@@ -252,6 +267,42 @@ function processImg(img) {
   } else {
     applyBehavior(img, img.getAttribute('alt'), 'show');
   }
+}
+
+// <video> にはalt属性が無いため、非対応ブラウザ向けのフォールバックコンテンツ
+// （<source>・<track> を除く子ノードのテキスト）を代替テキストとして扱う
+function getVideoFallbackText(video) {
+  let text = '';
+  video.childNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      text += node.textContent;
+    } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'SOURCE' && node.tagName !== 'TRACK') {
+      text += node.textContent;
+    }
+  });
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+function getVideoSrc(video) {
+  if (video.currentSrc || video.src) {
+    return video.currentSrc || video.src;
+  }
+  const source = video.querySelector('source[src]');
+  return source ? source.src : '';
+}
+
+function processVideo(video) {
+  const fallback = getVideoFallbackText(video);
+  if (fallback) {
+    applyBehavior(video, fallback, 'show');
+    return;
+  }
+  // フォールバックコンテンツが無い場合はalt属性なしの設定に準じるが、
+  // AIによる推測は画像単体を前提とした機能のため動画には適用せず、
+  // src表示にフォールバックする
+  const behavior = settings.missingAltBehavior === 'ai' ? 'show' : settings.missingAltBehavior;
+  const text = behavior === 'show' ? getVideoSrc(video) : '';
+  applyBehavior(video, text, behavior);
 }
 
 function processRoleImg(el) {
@@ -305,21 +356,25 @@ function processElement(el) {
   }
   if (el.tagName === 'IMG') {
     processImg(el);
+  } else if (el.tagName === 'VIDEO') {
+    processVideo(el);
   } else if (el.getAttribute('role') === 'img') {
     processRoleImg(el);
   }
 }
 
+const REPLACEABLE_SELECTOR = 'img, video, [role="img"]';
+
 function processTree(root) {
   if (root.nodeType !== Node.ELEMENT_NODE) {
     return;
   }
-  // 置き換え（img / role="img"）を先に処理してから背景画像を走査する。
+  // 置き換え（img / video / role="img"）を先に処理してから背景画像を走査する。
   // 置き換え済みサブツリー内の背景画像はマーカー判定でスキップされる。
-  if (root.matches('img, [role="img"]')) {
+  if (root.matches(REPLACEABLE_SELECTOR)) {
     processElement(root);
   }
-  root.querySelectorAll('img, [role="img"]').forEach(processElement);
+  root.querySelectorAll(REPLACEABLE_SELECTOR).forEach(processElement);
 
   if (settings.backgroundImageBehavior === 'hide') {
     processBackgroundImage(root);
@@ -343,9 +398,27 @@ function pruneRecords() {
   }
 }
 
+// 一部のサイトは video の poster 属性を要素追加後に非同期でセットする。
+// 既に置き換え済みの video で poster が後から付いた場合、パネルの下敷きに反映し直す
+function handlePosterAttributeChange(video) {
+  if (settings.mode !== 'panel' || settings.panelOpacity >= 100) {
+    return;
+  }
+  const record = records.find((r) => r.original === video);
+  if (record && record.replacement) {
+    setPanelUnderlay(record.replacement, video);
+  }
+}
+
 function startObserver() {
   observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
+      if (mutation.type === 'attributes') {
+        if (mutation.target.tagName === 'VIDEO') {
+          handlePosterAttributeChange(mutation.target);
+        }
+        continue;
+      }
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== Node.ELEMENT_NODE) {
           continue;
@@ -358,7 +431,12 @@ function startObserver() {
     }
     pruneRecords();
   });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['poster']
+  });
 }
 
 function restoreRecord(record) {

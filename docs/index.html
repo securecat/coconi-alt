@@ -44,6 +44,12 @@
     }
     a { color: #0B57D0; text-decoration: underline; }
     a:hover { text-decoration-thickness: 2px; }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .grid > div { max-width: 100%; }
   </style>
 </head>
 <body>
@@ -98,7 +104,49 @@
   <p>グラデーションは画像ではないので、そのまま残るのが正解です。</p>
   <p><span class="bg-gradient">グラデーション背景の要素</span></p>
 
-  <h2>11. 動的追加（MutationObserver確認用）</h2>
+  <h2>11. video要素（フォールバックコンテンツあり）</h2>
+  <p><code>&lt;video&gt;</code>内のテキスト「テスト用のサンプル動画（Big Buck Bunny）」が代替テキストとして表示されればOKです。パネルモードで不透明度を100%未満にしたとき、poster属性ありの方だけサムネイルが透けて見えるのが正解です。</p>
+  <div class="grid">
+    <div>
+      <p>poster属性あり</p>
+      <video width="300" height="169" controls poster="https://picsum.photos/id/1011/300/169">
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+        <track kind="captions" src="./sample-captions.vtt" srclang="ja" label="日本語">
+        <p>テスト用のサンプル動画（Big Buck Bunny）</p>
+      </video>
+    </div>
+    <div>
+      <p>poster属性なし</p>
+      <video width="300" height="169" controls>
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+        <track kind="captions" src="./sample-captions.vtt" srclang="ja" label="日本語">
+        <p>テスト用のサンプル動画（Big Buck Bunny）</p>
+      </video>
+    </div>
+  </div>
+  <p>後ろの段落です。</p>
+
+  <h2>12. video要素（フォールバックコンテンツなし）</h2>
+  <p>デフォルト設定では src のフルパスがテキスト表示されるのが正解です（AIによる推測は動画には適用されません）。こちらもposter属性ありの方だけサムネイルが透けて見えるのが正解です。</p>
+  <div class="grid">
+    <div>
+      <p>poster属性あり</p>
+      <video width="300" height="169" controls poster="https://picsum.photos/id/1050/300/169">
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+        <track kind="captions" src="./sample-captions.vtt" srclang="ja" label="日本語">
+      </video>
+    </div>
+    <div>
+      <p>poster属性なし</p>
+      <video width="300" height="169" controls>
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+        <track kind="captions" src="./sample-captions.vtt" srclang="ja" label="日本語">
+      </video>
+    </div>
+  </div>
+  <p>後ろの段落です。</p>
+
+  <h2>13. 動的追加（MutationObserver確認用）</h2>
   <p>下のボタンを押すと3秒後に画像が追加されます。追加後に自動で置き換わればOKです。</p>
   <p><button type="button" id="add-image">3秒後に画像を追加</button></p>
   <div id="dynamic-area"></div>
