@@ -5,6 +5,12 @@
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に準拠し、
 バージョン管理は [Semantic Versioning](https://semver.org/lang/ja/) に従います。
 
+## [1.5.1] - 2026-09-10
+
+### 修正
+
+- パネルモードでaltテキストをドラッグ選択できなかった問題を修正（`button` 要素はブラウザ既定でドラッグ選択が無効化されるため、明示的に解除した）
+
 ## [1.5.0] - 2026-07-29
 
 ### 追加
