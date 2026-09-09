@@ -38,6 +38,9 @@
 
 button.coconi-alt-panel {
   cursor: pointer;
+  /* ブラウザ既定でbutton要素はドラッグでのテキスト選択が無効化されているため明示的に解除する */
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 button.coconi-alt-panel:focus-visible {

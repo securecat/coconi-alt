@@ -133,6 +133,16 @@ function createPanel(text, record) {
     panel.type = 'button';
     panel.setAttribute('aria-expanded', 'false');
     panel.addEventListener('click', () => {
+      // テキストをドラッグ選択した際の mouseup でも click は発火するため、
+      // パネル内のテキストが選択された状態であれば展開/折りたたみを行わない
+      const selection = window.getSelection();
+      if (
+        selection &&
+        selection.toString().length > 0 &&
+        (panel.contains(selection.anchorNode) || panel.contains(selection.focusNode))
+      ) {
+        return;
+      }
       const expanded = panel.classList.toggle('coconi-alt-panel-expanded');
       panel.setAttribute('aria-expanded', String(expanded));
     });
