@@ -1,5 +1,25 @@
 'use strict';
 
+// ここにalt：「有効にする」設定に応じたツールバーアイコンの切り替え
+const ACTION_ICONS = {
+  on: { 16: 'icons/icon16.png', 32: 'icons/icon32.png', 48: 'icons/icon48.png', 128: 'icons/icon128.png' },
+  off: { 16: 'icons/icon16-off.png', 32: 'icons/icon32-off.png', 48: 'icons/icon48-off.png', 128: 'icons/icon128-off.png' }
+};
+
+function updateActionIcon(enabled) {
+  chrome.action.setIcon({ path: enabled ? ACTION_ICONS.on : ACTION_ICONS.off });
+}
+
+chrome.storage.sync.get({ enabled: true }, (stored) => {
+  updateActionIcon(stored.enabled);
+});
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'sync' && Object.prototype.hasOwnProperty.call(changes, 'enabled')) {
+    updateActionIcon(changes.enabled.newValue);
+  }
+});
+
 // ここにalt：AIによる代替テキスト生成（試験的機能）
 // Chrome内蔵AI（Prompt API + Gemini Nano）を使い、alt属性のない画像の
 // 代替テキストを画像単体から生成する。処理はすべて端末内で完結し、
