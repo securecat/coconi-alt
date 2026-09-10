@@ -1,9 +1,18 @@
 'use strict';
 
 // ここにalt：「有効にする」設定に応じたツールバーアイコンの切り替え
+// chrome.action.setIcon() は渡されたパスをservice worker内部でfetchするため、
+// 相対パスのままだとタイミングにより "Failed to fetch" で失敗することがある。
+// chrome.runtime.getURL() で拡張機能の絶対URLに変換して渡すことで回避する
+function toIconUrls(paths) {
+  return Object.fromEntries(
+    Object.entries(paths).map(([size, path]) => [size, chrome.runtime.getURL(path)])
+  );
+}
+
 const ACTION_ICONS = {
-  on: { 16: 'icons/icon16.png', 32: 'icons/icon32.png', 48: 'icons/icon48.png', 128: 'icons/icon128.png' },
-  off: { 16: 'icons/icon16-off.png', 32: 'icons/icon32-off.png', 48: 'icons/icon48-off.png', 128: 'icons/icon128-off.png' }
+  on: toIconUrls({ 16: 'icons/icon16.png', 32: 'icons/icon32.png', 48: 'icons/icon48.png', 128: 'icons/icon128.png' }),
+  off: toIconUrls({ 16: 'icons/icon16-off.png', 32: 'icons/icon32-off.png', 48: 'icons/icon48-off.png', 128: 'icons/icon128-off.png' })
 };
 
 function updateActionIcon(enabled) {
