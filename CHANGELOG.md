@@ -5,6 +5,13 @@
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に準拠し、
 バージョン管理は [Semantic Versioning](https://semver.org/lang/ja/) に従います。
 
+## [1.7.0] - 2026-09-10
+
+### 追加
+
+- 有効/無効の切替にショートカットキーを設定できるようにした（`chrome://extensions/shortcuts` の「有効/無効を切り替え」）
+- オプションページに「ショートカットキー」セクションを追加。現在の割当状況の表示と、Chromeのショートカット設定ページを開くボタンを設けた
+
 ## [1.6.0] - 2026-09-10
 
 ### 追加
