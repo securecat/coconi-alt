@@ -1,5 +1,6 @@
 {
   "manifest_version": 3,
+  "default_locale": "ja",
   "name": "ここにalt",
   "version": "1.6.0",
   "description": "Webページ中の画像をalt属性の内容（role=\"img\" 要素は aria-label）に置き換え、スクリーンリーダー利用者が耳で見ている世界を視覚化します。",
@@ -25,7 +26,7 @@
   },
   "commands": {
     "toggle-enabled": {
-      "description": "Toggle enable state"
+      "description": "__MSG_toggle_enabled_description__"
     }
   },
   "permissions": ["storage"],
