@@ -199,6 +199,18 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+/* ボタン型リンク：枠線自体が操作可能であることの手がかりになるため下線は付けない */
+.button-link {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid var(--color-text);
+  border-radius: 4px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 16px;
+  text-decoration: none;
+}
+
 input:focus-visible,
 textarea:focus-visible,
 button:focus-visible {
