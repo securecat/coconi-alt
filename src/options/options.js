@@ -22,6 +22,10 @@ const borderWidthInput = document.getElementById('border-width');
 const panelOpacityInput = document.getElementById('panel-opacity');
 const excludedDomainsInput = document.getElementById('excluded-domains');
 const statusOutput = document.getElementById('status');
+const shortcutStatusOutput = document.getElementById('shortcut-status');
+const openShortcutsLink = document.getElementById('open-shortcuts');
+
+const TOGGLE_ENABLED_COMMAND = 'toggle-enabled';
 
 function setRadioValue(name, value) {
   document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
@@ -52,6 +56,33 @@ async function restore() {
   setRadioValue('background-image', stored.backgroundImageBehavior);
   excludedDomainsInput.value = stored.excludedDomains.join('\n');
 }
+
+async function updateShortcutStatus() {
+  const commands = await chrome.commands.getAll();
+  const command = commands.find((item) => item.name === TOGGLE_ENABLED_COMMAND);
+  const shortcut = command ? command.shortcut : '';
+
+  shortcutStatusOutput.textContent = '';
+  if (shortcut) {
+    shortcutStatusOutput.append('ここにaltモードの有効/無効切替は');
+    const code = document.createElement('code');
+    code.textContent = shortcut;
+    shortcutStatusOutput.append(code);
+    shortcutStatusOutput.append('に割り当てられています。変更するにはChromeのショートカット設定を開いてください。');
+  } else {
+    shortcutStatusOutput.textContent =
+      'ここにaltモードの有効/無効切替にショートカットキーを割り当てることができます。現在は未設定です。';
+  }
+}
+
+openShortcutsLink.addEventListener('click', (event) => {
+  event.preventDefault();
+  chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
+});
+
+// ショートカット設定ページで変更してからこのタブに戻ってきた際に反映するため、
+// ウィンドウにフォーカスが戻るたび最新の割り当てを読み直す
+window.addEventListener('focus', updateShortcutStatus);
 
 function parseExcludedDomains(value) {
   return value
@@ -93,3 +124,4 @@ window.addEventListener('blur', clearStatus);
 form.addEventListener('input', clearStatus);
 
 restore();
+updateShortcutStatus();
