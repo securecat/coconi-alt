@@ -5,6 +5,16 @@
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に準拠し、
 バージョン管理は [Semantic Versioning](https://semver.org/lang/ja/) に従います。
 
+## [1.6.0] - 2026-09-10
+
+### 追加
+
+- ポップアップの「有効にする」のチェックを外している間（無効状態）、ツールバーアイコンをオフ表示に切り替えるようにした
+
+### 修正
+
+- ツールバーアイコンの動的切り替えが `Failed to fetch` で失敗することがあったのを修正（`chrome.runtime.getURL()` で絶対URL化してから渡すようにした）
+
 ## [1.5.1] - 2026-09-10
 
 ### 修正
