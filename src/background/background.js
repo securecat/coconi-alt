@@ -29,6 +29,16 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
+// ショートカットキー（chrome://extensions/shortcuts）から有効/無効を切り替える
+chrome.commands.onCommand.addListener((command) => {
+  if (command !== 'toggle-enabled') {
+    return;
+  }
+  chrome.storage.sync.get({ enabled: true }, (stored) => {
+    chrome.storage.sync.set({ enabled: !stored.enabled });
+  });
+});
+
 // ここにalt：AIによる代替テキスト生成（試験的機能）
 // Chrome内蔵AI（Prompt API + Gemini Nano）を使い、alt属性のない画像の
 // 代替テキストを画像単体から生成する。処理はすべて端末内で完結し、

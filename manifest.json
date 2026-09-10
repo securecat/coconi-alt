@@ -23,6 +23,11 @@
     "page": "src/options/options.html",
     "open_in_tab": true
   },
+  "commands": {
+    "toggle-enabled": {
+      "description": "Toggle enable state"
+    }
+  },
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
   "background": {
