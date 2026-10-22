@@ -56,18 +56,41 @@ function measureOriginal(record) {
   const el = record.original;
   const currentDisplay = el.style.display;
   el.style.display = record.inlineDisplay;
-  const rect = el.getBoundingClientRect();
+  const computed = getComputedStyle(el);
+  const measured = {
+    rect: el.getBoundingClientRect(),
+    display: computed.display,
+    marginLeft: computed.marginLeft,
+    marginRight: computed.marginRight
+  };
   el.style.display = currentDisplay;
-  return rect;
+  return measured;
 }
 
-function setPanelSize(panel, record) {
-  const rect = measureOriginal(record);
-  if (rect.width > 0) {
-    panel.style.setProperty('--coconi-alt-width', `${rect.width}px`);
+// 元要素の配置（センタリング等）とパネルのサイズを置き換え要素に反映する。
+// 初回適用時だけでなく、ウィンドウリサイズ時の再計測にも使う
+function refreshLayout(record) {
+  const { replacement } = record;
+  if (!replacement || !replacement.isConnected) {
+    return;
   }
-  if (rect.height > 0) {
-    panel.style.setProperty('--coconi-alt-height', `${rect.height}px`);
+  const measured = measureOriginal(record);
+
+  // 元要素が display: block + margin: auto 等でセンタリングされていた場合、
+  // 置き換え要素も同じ配置にしないと左寄せになってしまう
+  if (measured.display === 'block') {
+    replacement.style.display = 'block';
+    replacement.style.marginLeft = measured.marginLeft;
+    replacement.style.marginRight = measured.marginRight;
+  }
+
+  if (settings.mode === 'panel') {
+    if (measured.rect.width > 0) {
+      replacement.style.setProperty('--coconi-alt-width', `${measured.rect.width}px`);
+    }
+    if (measured.rect.height > 0) {
+      replacement.style.setProperty('--coconi-alt-height', `${measured.rect.height}px`);
+    }
   }
 }
 
@@ -227,11 +250,6 @@ function applyBehavior(el, text, behavior) {
   } else if (behavior === 'visibility-hidden') {
     el.style.visibility = 'hidden';
   } else {
-    const originalComputed = getComputedStyle(el);
-    const originalDisplay = originalComputed.display;
-    const originalMarginLeft = originalComputed.marginLeft;
-    const originalMarginRight = originalComputed.marginRight;
-
     let replacement;
     if (settings.mode === 'text-fixed') {
       replacement = createTextFixed(text);
@@ -244,22 +262,15 @@ function applyBehavior(el, text, behavior) {
     el.insertAdjacentElement('afterend', replacement);
     record.replacement = replacement;
 
-    // 元要素が display: block + margin: auto 等でセンタリングされていた場合、
-    // 置き換え要素も同じ配置にしないと左寄せになってしまう
-    if (originalDisplay === 'block') {
-      replacement.style.display = 'block';
-      replacement.style.marginLeft = originalMarginLeft;
-      replacement.style.marginRight = originalMarginRight;
-    }
+    refreshLayout(record);
 
     if (settings.mode === 'panel') {
-      setPanelSize(replacement, record);
       if (el.tagName === 'IMG') {
         setPanelUnderlay(replacement, el);
         // 未ロード画像は寸法・currentSrcが確定していないため、ロード完了後に反映し直す
         if (!el.complete) {
           el.addEventListener('load', () => {
-            setPanelSize(replacement, record);
+            refreshLayout(record);
             setPanelUnderlay(replacement, el);
           }, { once: true });
         }
@@ -514,4 +525,17 @@ chrome.storage.onChanged.addListener((changes, area) => {
 chrome.storage.sync.get(COCONI_ALT_DEFAULTS).then((stored) => {
   settings = stored;
   refresh();
+});
+
+// レスポンシブ画像等、ウィンドウ幅によってサイズ・配置が変わる元要素に追従するため、
+// リサイズのたびに全置き換え要素のサイズ・配置を測り直す
+let resizeRafId = null;
+window.addEventListener('resize', () => {
+  if (resizeRafId !== null) {
+    return;
+  }
+  resizeRafId = requestAnimationFrame(() => {
+    resizeRafId = null;
+    records.forEach(refreshLayout);
+  });
 });
