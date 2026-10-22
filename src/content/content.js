@@ -227,6 +227,11 @@ function applyBehavior(el, text, behavior) {
   } else if (behavior === 'visibility-hidden') {
     el.style.visibility = 'hidden';
   } else {
+    const originalComputed = getComputedStyle(el);
+    const originalDisplay = originalComputed.display;
+    const originalMarginLeft = originalComputed.marginLeft;
+    const originalMarginRight = originalComputed.marginRight;
+
     let replacement;
     if (settings.mode === 'text-fixed') {
       replacement = createTextFixed(text);
@@ -238,6 +243,14 @@ function applyBehavior(el, text, behavior) {
     el.style.display = 'none';
     el.insertAdjacentElement('afterend', replacement);
     record.replacement = replacement;
+
+    // 元要素が display: block + margin: auto 等でセンタリングされていた場合、
+    // 置き換え要素も同じ配置にしないと左寄せになってしまう
+    if (originalDisplay === 'block') {
+      replacement.style.display = 'block';
+      replacement.style.marginLeft = originalMarginLeft;
+      replacement.style.marginRight = originalMarginRight;
+    }
 
     if (settings.mode === 'panel') {
       setPanelSize(replacement, record);
