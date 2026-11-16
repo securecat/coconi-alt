@@ -53,7 +53,7 @@ UIは WCAG 2.2 のレベル AA を目標とし、これを上限ではなく下�
 - 報告を確認したら、Issue で返信します
 - 回避策があれば、お知らせします
 - 修正をリリースする前に、問題が解消したかどうかの確認をお願いすることがあります
-- 修正の内容は [CHANGELOG.md](../CHANGELOG.md) に記載します
+- 修正の内容は [CHANGELOG.md](https://github.com/securecat/coconi-alt/blob/main/CHANGELOG.md) に記載します
 
 ## 貢献者への期待
 
