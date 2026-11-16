@@ -21,7 +21,7 @@ UIは WCAG 2.2 のレベル AA を目標とし、これを上限ではなく下�
 ## 対応している環境
 
 - ブラウザ：Google Chrome、Microsoft Edge（Chromium版）。ただし「AIによる推測」機能はGoogle Chrome内蔵のAI（Gemini Nano）を使うため、Google Chromeでのみ利用できます
-- スクリーンリーダー：Windows の NVDA で読み上げを確認済みです。ほかのスクリーンリーダーはまだ試していません
+- スクリーンリーダー：Windows の NVDA・PC-Talker で読み上げを確認済みです。ほかのスクリーンリーダーはまだ試していません
 - すべての機能を、キーボードだけで操作できます
 
 ## 既知の制限
