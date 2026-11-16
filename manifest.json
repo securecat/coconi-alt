@@ -28,7 +28,7 @@
       "description": "有効/無効を切り替え"
     }
   },
-  "permissions": ["storage"],
+  "permissions": ["storage", "notifications"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "src/background/background.js"

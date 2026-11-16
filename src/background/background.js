@@ -29,13 +29,22 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
-// ショートカットキー（chrome://extensions/shortcuts）から有効/無効を切り替える
+// ショートカットキー（chrome://extensions/shortcuts）から有効/無効を切り替える。
+// ポップアップを開かずに切り替えるため、ツールバーアイコンの見た目変化だけでは
+// スクリーンリーダー等の支援技術に状態変化が伝わらない。システム通知で補う
 chrome.commands.onCommand.addListener((command) => {
   if (command !== 'toggle-enabled') {
     return;
   }
   chrome.storage.sync.get({ enabled: true }, (stored) => {
-    chrome.storage.sync.set({ enabled: !stored.enabled });
+    const enabled = !stored.enabled;
+    chrome.storage.sync.set({ enabled });
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: chrome.runtime.getURL('icons/icon128.png'),
+      title: 'ここにalt',
+      message: enabled ? '有効にしました' : '無効にしました'
+    });
   });
 });
 
